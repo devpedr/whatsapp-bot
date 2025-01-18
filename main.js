@@ -1,6 +1,7 @@
 const { Client, RemoteAuth } = require('whatsapp-web.js');
 const { AwsS3Store } = require('wwebjs-aws-s3');
 const qrcode = require('qrcode-terminal');
+const axios = require('axios')
 const {
     S3Client,
     PutObjectCommand,
@@ -9,6 +10,7 @@ const {
     DeleteObjectCommand
 } = require('@aws-sdk/client-s3');
 
+const puppeteerConfig = !options.chrome ? { executablePath: "/usr/bin/chromium-browser", args: ['--no-sandbox'] } : { executablePath: "/usr/bin/chromium-browser", args: ['--no-sandbox'] }
 const s3 = new S3Client({
     region: 'AWS_REGION',
     credentials: {
@@ -36,6 +38,7 @@ const client = new Client({
     authStrategy: new RemoteAuth({
         clientId: 'yourSessionName',
         dataPath: 'yourFolderName',
+        puppeteer: puppeteerConfig,
         store: store,
         backupSyncIntervalMs: 600000
     })
