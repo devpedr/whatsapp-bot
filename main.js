@@ -1,7 +1,7 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const axios = require('axios')
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -18,8 +18,13 @@ async function main() {
             '--disable-dev-shm-usage', // Evita problemas de memória
             '--single-process' // Necessário para alguns ambientes
         ],
-        executablePath: process.env.CHROMIUM_PATH || '/snap/bin/chromium' // Caminho do Chromium no servidor
+        executablePath:'/usr/bin/chromium-browser' // Caminho do Chromium no servidor
     });
+    const page = await browser.newPage();
+    await page.goto('https://example.com');
+    console.log(await page.title());
+    await browser.close();
+
 
     client.on('ready', () => {
         console.log('Client is ready!');
