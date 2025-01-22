@@ -2,6 +2,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const axios = require('axios')
 const puppeteer = require('puppeteer-core');
+const {error} = require("qrcode-terminal");
 
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -10,20 +11,27 @@ const client = new Client({
     })
 });
 async function main() {
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage', // Evita problemas de memória
-            '--single-process' // Necessário para alguns ambientes
-        ],
-        executablePath:'/usr/bin/chromium-browser' // Caminho do Chromium no servidor
-    });
-    const page = await browser.newPage();
-    await page.goto('https://example.com');
-    console.log(await page.title());
-    await browser.close();
+    try {
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage', // Evita problemas de memória
+                '--single-process', // Necessário para alguns ambientes
+
+            ],
+            executablePath: '/snap/chromium/3019/usr/lib/chromium-browser/chrome-sandbox' // Caminho do Chromium no servidor
+        });
+        const page = await browser.newPage();
+        await page.goto('https://example.com');
+        console.log(await page.title());
+        await browser.close();
+
+    }catch (error){
+        console.log('Erro ao iniciar o navegador',error);
+    }
+
 
 
     client.on('ready', () => {
@@ -33,9 +41,7 @@ async function main() {
     client.on('qr', qr => {
         qrcode.generate(qr, {small: true});
     });
-    client.on('remote_session_saved', () => {
-        // Do Stuff...
-    });
+
 
     client.initialize();
 
