@@ -18,7 +18,7 @@ async function main() {
             '--disable-dev-shm-usage', // Evita problemas de memória
             '--single-process' // Necessário para alguns ambientes
         ],
-        executablePath: "/usr/bin/chromium"
+        executablePath: puppeteer.executablePath()
     });
 
     client.on('ready', () => {
