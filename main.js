@@ -18,7 +18,7 @@ async function main() {
             '--disable-dev-shm-usage', // Evita problemas de memória
             '--single-process' // Necessário para alguns ambientes
         ],
-        executablePath: puppeteer.executablePath()
+        executablePath: process.env.CHROMIUM_PATH || '/snap/bin/chromium' // Caminho do Chromium no servidor
     });
 
     client.on('ready', () => {
