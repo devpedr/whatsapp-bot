@@ -1,37 +1,35 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
-const axios = require('axios')
-const puppeteer = require('puppeteer-core');
-const {error} = require("qrcode-terminal");
+const puppeteer = require('puppeteer');
+
 
 const client = new Client({
-    authStrategy: new LocalAuth({
-        dataPath: 'yourFolderName',
-
-    })
+    authStrategy: new LocalAuth(),
+        puppeteer: {
+            headless: true,
+            executablePath: process.env.CHROMIUM_PATH || '/usr/bin/google-chrome-stable' // Caminho do Chromium no servidor
+        },
 });
 async function main() {
     try {
         const browser = await puppeteer.launch({
-            headless: true,
-            args: [
+           args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage', // Evita problemas de memória
                 '--single-process', // Necessário para alguns ambientes
-
             ],
-            executablePath: '/snap/chromium/3019/usr/lib/chromium-browser/chrome-sandbox' // Caminho do Chromium no servidor
+
         });
         const page = await browser.newPage();
         await page.goto('https://example.com');
-        console.log(await page.title());
+        console.log('Navegador iniciado com sucesso!');
+
         await browser.close();
 
     }catch (error){
         console.log('Erro ao iniciar o navegador',error);
     }
-
 
 
     client.on('ready', () => {
@@ -43,7 +41,7 @@ async function main() {
     });
 
 
-    client.initialize();
+    await client.initialize();
 
 
     const delay = (ms) => new Promise((res) => setTimeout(res, ms)); // Criando o delay

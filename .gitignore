@@ -7,5 +7,4 @@
 /dataSources/
 /dataSources.local.xml
 node_modules
-yourFolderName
-/.wwebjs_cache
+.wwebjs_auth
